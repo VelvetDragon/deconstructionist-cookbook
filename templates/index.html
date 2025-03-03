@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center animate__animated animate__fadeInUp">
+    <h2>What's in your Kitchen Today?</h2>
+    <p>Enter your available ingredients and discover the cultural DNA of your pantry.</p>
+    <form action="{{ url_for('results') }}" method="post" class="my-4">
+        <div class="form-group">
+            <label for="ingredients"><strong>List your ingredients (comma separated):</strong></label>
+            <input type="text" id="ingredients" name="ingredients" class="form-control" placeholder="e.g., tomatoes, basil, garlic, olive oil, salt" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg interactive-button">Remix My Recipes</button>
+    </form>
+</div>
+{% endblock %}

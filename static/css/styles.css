@@ -1,0 +1,100 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: #f8f8f8;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+header, footer {
+    background-color: #2d3e50;
+    color: #fff;
+    padding: 1.2em 0;
+    text-align: center;
+}
+
+header h1 {
+    font-family: 'Playfair Display', serif;
+    margin: 0.2em;
+    font-size: 3em;
+    letter-spacing: 2px;
+}
+
+.tagline {
+    font-size: 1.3em;
+    font-style: italic;
+    margin-top: 0.3em;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 2em;
+    margin-top: 2em;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* Recipe Card Styles */
+.recipe-card {
+    border: 1px solid #ddd;
+    padding: 1.5em;
+    background-color: #fdfdfd;
+    border-radius: 8px;
+    margin-bottom: 1.5em;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+/* Floating Tabs */
+.floating-tabs {
+    margin-bottom: 1em;
+    border-bottom: 2px solid #ddd;
+}
+.floating-tabs .nav-link {
+    font-size: 1.1em;
+    padding: 0.8em 1.2em;
+    margin-right: 0.5em;
+    border-radius: 8px 8px 0 0;
+    background-color: #e9eff5;
+    color: #2d3e50;
+    transition: background-color 0.3s ease;
+}
+.floating-tabs .nav-link:hover {
+    background-color: #d0e2f2;
+}
+.floating-tabs .nav-link.active {
+    background-color: #fff;
+    border-bottom: 2px solid #fff;
+}
+
+/* Chart Container */
+.chart-container {
+    margin: 2em auto;
+    padding: 1em;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Interactive Buttons */
+.interactive-button {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.interactive-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Back Link Button */
+.btn-secondary {
+    background-color: #2d3e50;
+    border-color: #2d3e50;
+}
+.btn-secondary:hover {
+    background-color: #3e5c76;
+    border-color: #3e5c76;
+}

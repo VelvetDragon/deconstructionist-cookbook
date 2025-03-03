@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="animate__animated animate__fadeInUp">
+    <h2 class="text-center">Your Culinary Remix Results</h2>
+    <p class="text-center">Based on your ingredients: <strong>{{ user_ingredients | join(', ') }}</strong></p>
+    
+    <!-- Floating Tabs for Recipes, Culinary Ancestry, and Visualizations -->
+    <ul class="nav nav-tabs floating-tabs" id="resultsTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="recipes-tab" data-toggle="tab" href="#recipes" role="tab" aria-controls="recipes" aria-selected="true">Recipes</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="ancestry-tab" data-toggle="tab" href="#ancestry" role="tab" aria-controls="ancestry" aria-selected="false">Culinary Ancestry</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="viz-tab" data-toggle="tab" href="#viz" role="tab" aria-controls="viz" aria-selected="false">Visualizations</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="resultsTabContent">
+        <!-- Recipes Tab -->
+        <div class="tab-pane fade show active pt-3" id="recipes" role="tabpanel" aria-labelledby="recipes-tab">
+            {% if recipes %}
+                {% for recipe in recipes %}
+                    <div class="recipe-card animate__animated animate__zoomIn mb-4">
+                        <h3>{{ recipe.name }}</h3>
+                        <p><strong>Match:</strong> {{ recipe.match_percent }}%</p>
+                        <p class="description"><em>{{ recipe.description }}</em></p>
+                        <p><strong>Your Ingredients in Recipe:</strong> {{ recipe.have | join(', ') }}</p>
+                        <p><strong>Missing Ingredients:</strong> {{ recipe.missing | join(', ') }}</p>
+                        {% if recipe.substitutions %}
+                            <p><strong>Substitution Suggestions:</strong></p>
+                            <ul>
+                                {% for missing, substitute in recipe.substitutions.items() %}
+                                    <li>{{ missing }} → {{ substitute }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <h4>Cooking Steps:</h4>
+                        <ol>
+                            {% for step in recipe.steps %}
+                                <li>{{ step }}</li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-match">No recipes matched your ingredients. Try adding more variety!</p>
+            {% endif %}
+        </div>
+        <!-- Culinary Ancestry Tab -->
+        <div class="tab-pane fade pt-3" id="ancestry" role="tabpanel" aria-labelledby="ancestry-tab">
+            <div class="food-identity text-center mb-4">
+                <h4>Your Culinary Ancestry Report</h4>
+                {% if food_identity %}
+                    <p>Your ingredients reveal strong influences from: <strong>{{ food_identity | join(', ') }}</strong>.</p>
+                    <p>This suggests your culinary DNA is a fusion of these cultures!</p>
+                {% else %}
+                    <p>We couldn’t determine your culinary ancestry. Try including more distinctive ingredients!</p>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Visualizations Tab -->
+        <div class="tab-pane fade pt-3" id="viz" role="tabpanel" aria-labelledby="viz-tab">
+            <!-- Cultural Origin Map -->
+            {% if graphJSON_map %}
+            <div id="graph-map" class="chart-container mb-4"></div>
+            <script>
+                var graphMap = {{ graphJSON_map | safe }};
+                Plotly.newPlot('graph-map', graphMap.data, graphMap.layout);
+            </script>
+            {% endif %}
+            <!-- Recipe Match Bar Chart -->
+            {% if graphJSON_match %}
+            <div id="graph-match" class="chart-container mb-4"></div>
+            <script>
+                var graphMatch = {{ graphJSON_match | safe }};
+                Plotly.newPlot('graph-match', graphMatch.data, graphMatch.layout);
+            </script>
+            {% endif %}
+            <!-- Top Ingredients Frequency -->
+            <div id="graph-ing" class="chart-container mb-4"></div>
+            <script>
+                var graphIng = {{ graphJSON_ing | safe }};
+                Plotly.newPlot('graph-ing', graphIng.data, graphIng.layout);
+            </script>
+            <!-- Recipe Clusters Pie Chart -->
+            {% if graphJSON_cluster %}
+            <div id="graph-cluster" class="chart-container mb-4"></div>
+            <script>
+                var graphCluster = {{ graphJSON_cluster | safe }};
+                Plotly.newPlot('graph-cluster', graphCluster.data, graphCluster.layout);
+            </script>
+            {% endif %}
+            <!-- Ingredient Co-occurrence Network Graph -->
+            <div id="graph-network" class="chart-container mb-4"></div>
+            <script>
+                var graphNetwork = {{ graphJSON_network | safe }};
+                Plotly.newPlot('graph-network', graphNetwork.data, graphNetwork.layout);
+            </script>
+            <!-- Flavor Profile Radar Chart -->
+            <div id="graph-radar" class="chart-container mb-4"></div>
+            <script>
+                var graphRadar = {{ graphJSON_radar | safe }};
+                Plotly.newPlot('graph-radar', graphRadar.data, graphRadar.layout);
+            </script>
+        </div>
+    </div>
+    <div class="text-center my-4">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg interactive-button">&#8592; Back to Remix</a>
+    </div>
+</div>
+{% endblock %}
