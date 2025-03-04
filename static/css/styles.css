@@ -1,100 +1,170 @@
 /* Global Styles */
-body {
+body.food-bg {
     font-family: 'Roboto', sans-serif;
-    background: #f8f8f8;
+    background: linear-gradient(135deg, #F5E8C7, #F0E68C);
     margin: 0;
     padding: 0;
     color: #333;
 }
 
 header, footer {
-    background-color: #2d3e50;
-    color: #fff;
-    padding: 1.2em 0;
+    background-color: #8B4513;
+    color: #FFD700;
+    padding: 1em 0;
     text-align: center;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 5px rgba(139, 69, 19, 0.2);
 }
 
 header h1 {
     font-family: 'Playfair Display', serif;
-    margin: 0.2em;
-    font-size: 3em;
-    letter-spacing: 2px;
+    margin: 0.3em 0;
+    font-size: 2.5em;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.3);
 }
 
 .tagline {
-    font-size: 1.3em;
+    font-family: 'Comic Neue', cursive;
+    font-size: 1.2em;
     font-style: italic;
     margin-top: 0.3em;
+    text-shadow: 1px 1px 1px rgba(255, 215, 0, 0.2);
 }
 
 .container {
-    background-color: #fff;
+    background-color: #FFF8DC;
     border-radius: 10px;
-    padding: 2em;
-    margin-top: 2em;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    padding: 1em;
+    margin: 1em auto;
+    box-shadow: 0 4px 10px rgba(139, 69, 19, 0.2);
+}
+
+/* Navbar */
+.navbar.bg-food-dark {
+    background-color: #DAA520 !important;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 0 2px 5px rgba(218, 165, 32, 0.2);
+    margin-bottom: 1em;
 }
 
 /* Recipe Card Styles */
 .recipe-card {
-    border: 1px solid #ddd;
-    padding: 1.5em;
-    background-color: #fdfdfd;
-    border-radius: 8px;
-    margin-bottom: 1.5em;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #DAA520;
+    padding: 1em;
+    background-color: #F5E8C7;
+    border-radius: 10px;
+    margin-bottom: 1em;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 3px 8px rgba(218, 165, 32, 0.1);
 }
 .recipe-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    transform: scale(1.02);
+    box-shadow: 0 5px 12px rgba(218, 165, 32, 0.2);
+    background-color: #F0E68C;
+}
+
+/* Visualization Card Styles */
+.visualization-card {
+    border: 1px solid #DAA520;
+    padding: 1em;
+    background-color: #F5E8C7;
+    border-radius: 10px;
+    margin-bottom: 1em;
+    box-shadow: 0 3px 8px rgba(218, 165, 32, 0.1);
+}
+.visualization-card h4 {
+    margin-top: 0;
 }
 
 /* Floating Tabs */
 .floating-tabs {
     margin-bottom: 1em;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 1px solid #DAA520;
+    background-color: #FFF8DC;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 -1px 5px rgba(218, 165, 32, 0.1);
 }
 .floating-tabs .nav-link {
+    font-family: 'Comic Neue', cursive;
     font-size: 1.1em;
-    padding: 0.8em 1.2em;
-    margin-right: 0.5em;
+    padding: 0.6em 1em;
+    margin-right: 0.3em;
     border-radius: 8px 8px 0 0;
-    background-color: #e9eff5;
-    color: #2d3e50;
-    transition: background-color 0.3s ease;
+    background-color: #DAA520;
+    color: #8B4513;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 .floating-tabs .nav-link:hover {
-    background-color: #d0e2f2;
+    background-color: #8B4513;
+    color: #FFD700;
+    transform: scale(1.05);
 }
 .floating-tabs .nav-link.active {
-    background-color: #fff;
-    border-bottom: 2px solid #fff;
+    background-color: #8B4513;
+    border-bottom: 1px solid #8B4513;
+    color: #FFD700;
+    transform: scale(1.05);
 }
 
 /* Chart Container */
 .chart-container {
-    margin: 2em auto;
+    margin: 1em auto;
     padding: 1em;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    background-color: #FFF8DC;
+    box-shadow: 0 3px 8px rgba(218, 165, 32, 0.1);
 }
 
 /* Interactive Buttons */
 .interactive-button {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: 'Comic Neue', cursive;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    border-radius: 10px;
+    padding: 0.6em 1em;
+    box-shadow: 0 2px 6px rgba(218, 165, 32, 0.1);
 }
 .interactive-button:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 10px rgba(218, 165, 32, 0.2);
+    background-color: #8B4513;
+    color: #FFD700;
 }
 
 /* Back Link Button */
 .btn-secondary {
-    background-color: #2d3e50;
-    border-color: #2d3e50;
+    background-color: #DAA520;
+    border-color: #DAA520;
+    font-family: 'Comic Neue', cursive;
 }
 .btn-secondary:hover {
-    background-color: #3e5c76;
-    border-color: #3e5c76;
+    background-color: #8B4513;
+    border-color: #8B4513;
+    transform: scale(1.05);
+    color: #FFD700;
+}
+
+/* Bubbly Input */
+.bubbly-input {
+    font-family: 'Comic Neue', cursive;
+    border: 1px solid #DAA520;
+    border-radius: 10px;
+    padding: 0.6em;
+    box-shadow: 0 2px 6px rgba(218, 165, 32, 0.1);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.bubbly-input:focus {
+    border-color: #8B4513;
+    box-shadow: 0 4px 10px rgba(139, 69, 19, 0.2);
+    outline: none;
+}
+
+/* No Match Message */
+.no-match {
+    font-size: 1.1em;
+    padding: 0.8em;
+    background-color: #F0E68C;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(218, 165, 32, 0.1);
 }

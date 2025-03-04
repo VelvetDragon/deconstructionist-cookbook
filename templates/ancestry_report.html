@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="py-3">
+    <h2 class="text-center" style="font-family: 'Comic Neue', cursive; color: #DAA520;">Your Culinary Ancestry Report</h2>
+    <p class="text-center" style="font-family: 'Roboto', sans-serif; color: #8B4513;">Based on your ingredients: <strong>{{ user_ingredients | join(', ') }}</strong></p>
+    <div class="text-center my-3">
+        <p style="font-family: 'Roboto', sans-serif; color: #8B4513;">{{ ancestry_message }}</p>
+        {% if ancestry_recipes %}
+            <h4 style="font-family: 'Comic Neue', cursive; color: #DAA520;">Suggested Recipes from Your Heritage</h4>
+            <ul style="list-style-type: none; font-family: 'Roboto', sans-serif; color: #8B4513;">
+                {% for recipe in ancestry_recipes %}
+                    <li>{{ recipe.recipe_name }}<br>{{ recipe.instructions }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <p style="font-family: 'Roboto', sans-serif; color: #DAA520;">Explore recipes from your dominant heritage to deepen your culinary identity!</p>
+        <a href="{{ url_for('results') }}" class="btn btn-secondary btn-lg interactive-button" style="background-color: #DAA520; border-color: #DAA520;">Back to Results</a>
+    </div>
+</div>
+{% endblock %}

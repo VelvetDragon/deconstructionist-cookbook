@@ -3,35 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Deconstructionist Cookbook</title>
-    <!-- Google Fonts: Playfair Display for headings, Roboto for body -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto&display=swap" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Animate.css for animations -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- Google Fonts: Playfair Display for headings, Comic Neue for bubbly text, Roboto for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Comic+Neue:wght@700&family=Roboto&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS (minified for performance) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <!-- Plotly JS -->
+    <!-- Plotly JS (minified) -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- Leaflet JS and CSS for map (optional, for ingredient origins) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
-<body>
-    <header class="animate__animated animate__fadeInDown">
-        <h1 style="font-family: 'Playfair Display', serif;">The Deconstructionist Cookbook</h1>
-        <p class="tagline">Where your ingredients reveal your culinary DNA.</p>
+<body class="food-bg">
+    <header class="py-3">
+        <h1 style="font-family: 'Playfair Display', serif; color: #8B4513; text-shadow: 1px 1px 2px #FFD700;">The Deconstructionist Cookbook</h1>
+        <p class="tagline" style="font-family: 'Comic Neue', cursive; color: #DAA520;">Unveiling Your Culinary Identity Through Ingredients!</p>
     </header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{{ url_for('index') }}">Home</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-food-dark mb-3">
+        <a class="navbar-brand" href="{{ url_for('index') }}" style="font-family: 'Comic Neue', cursive; color: #FFD700;">Home</a>
     </nav>
-    <main class="container my-4">
+    <main class="container my-3">
         {% block content %}{% endblock %}
     </main>
-    <footer class="animate__animated animate__fadeInUp bg-dark text-white text-center py-3">
-        <p>&copy; 2025 Deconstructionist Cookbook | Embrace your food identity</p>
+    <footer class="bg-food-dark text-white text-center py-3 mt-3">
+        <p style="font-family: 'Comic Neue', cursive;">© 2025 Deconstructionist Cookbook | Savor the Flavor of Your Heritage!</p>
     </footer>
-    <!-- jQuery, Popper.js, and Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- jQuery, Popper.js, and Bootstrap JS (minified) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <!-- Custom JavaScript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>

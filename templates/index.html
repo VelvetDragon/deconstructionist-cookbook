@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="text-center animate__animated animate__fadeInUp">
-    <h2>What's in your Kitchen Today?</h2>
-    <p>Enter your available ingredients and discover the cultural DNA of your pantry.</p>
-    <form action="{{ url_for('results') }}" method="post" class="my-4">
+<div class="text-center py-3">
+    <h2 style="font-family: 'Comic Neue', cursive; color: #DAA520;">What’s Cooking in Your Kitchen?</h2>
+    <p style="font-family: 'Roboto', sans-serif; color: #8B4513;">Enter your available ingredients (comma-separated) to discover your culinary identity and recipes!</p>
+    <form action="{{ url_for('results') }}" method="post" class="my-3">
         <div class="form-group">
-            <label for="ingredients"><strong>List your ingredients (comma separated):</strong></label>
-            <input type="text" id="ingredients" name="ingredients" class="form-control" placeholder="e.g., tomatoes, basil, garlic, olive oil, salt" required>
+            <label for="ingredients" style="font-family: 'Comic Neue', cursive; color: #8B4513;"><strong>Stir in Your Ingredients:</strong></label>
+            <input type="text" id="ingredients" name="ingredients" class="form-control bubbly-input" placeholder="e.g., tomatoes, basil, garlic" required>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg interactive-button">Remix My Recipes</button>
+        <button type="submit" class="btn btn-primary btn-lg interactive-button" style="background-color: #DAA520; border-color: #DAA520;">Whisk Up Recipes!</button>
     </form>
+    <p class="text-center" style="font-family: 'Comic Neue', cursive; color: #8B4513;">Unlock the flavors of your heritage!</p>
 </div>
 {% endblock %}

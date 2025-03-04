@@ -1,112 +1,119 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="animate__animated animate__fadeInUp">
-    <h2 class="text-center">Your Culinary Remix Results</h2>
-    <p class="text-center">Based on your ingredients: <strong>{{ user_ingredients | join(', ') }}</strong></p>
+<div class="py-3">
+    <h2 class="text-center" style="font-family: 'Comic Neue', cursive; color: #DAA520;">Your Culinary Remix Results</h2>
+    <p class="text-center" style="font-family: 'Roboto', sans-serif; color: #8B4513;">You entered: <strong>{{ user_ingredients | join(', ') }}</strong></p>
     
-    <!-- Floating Tabs for Recipes, Culinary Ancestry, and Visualizations -->
+    <!-- Identity Insights -->
+    <div class="text-center my-3">
+        <h3 style="font-family: 'Comic Neue', cursive; color: #DAA520;">Discover Your Culinary Identity</h3>
+        <p style="font-family: 'Roboto', sans-serif; color: #8B4513;">{{ flavor_message }}</p>
+        <p style="font-family: 'Roboto', sans-serif; color: #8B4513;">{{ ancestry_message }}</p>
+        <div class="my-3">
+            <button class="btn btn-info btn-lg interactive-button mx-2" id="flavorRadarBtn" style="background-color: #DAA520; border-color: #DAA520;">View Flavor Profile</button>
+            <a href="{{ url_for('ancestry_report', ingredients=','.join(user_ingredients)) }}" class="btn btn-info btn-lg interactive-button mx-2" style="background-color: #DAA520; border-color: #DAA520;">Ancestry Report</a>
+            <a href="{{ url_for('recipe_time_travel', ingredients=','.join(user_ingredients)) }}" class="btn btn-info btn-lg interactive-button mx-2" style="background-color: #DAA520; border-color: #DAA520;">Recipe Time Travel</a>
+            <a href="{{ url_for('ingredient_origins_map', ingredients=','.join(user_ingredients)) }}" class="btn btn-info btn-lg interactive-button mx-2" style="background-color: #DAA520; border-color: #DAA520;">Ingredient Origins Map</a>
+        </div>
+    </div>
+    
+    <!-- Tabs for Recipes and Visualizations -->
     <ul class="nav nav-tabs floating-tabs" id="resultsTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="recipes-tab" data-toggle="tab" href="#recipes" role="tab" aria-controls="recipes" aria-selected="true">Recipes</a>
+            <a class="nav-link active" id="recipes-tab" data-toggle="tab" href="#recipes" role="tab" aria-controls="recipes" aria-selected="true" style="font-family: 'Comic Neue', cursive; background-color: #DAA520; color: #8B4513;">Top Recipes</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="ancestry-tab" data-toggle="tab" href="#ancestry" role="tab" aria-controls="ancestry" aria-selected="false">Culinary Ancestry</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="viz-tab" data-toggle="tab" href="#viz" role="tab" aria-controls="viz" aria-selected="false">Visualizations</a>
+            <a class="nav-link" id="visuals-tab" data-toggle="tab" href="#visuals" role="tab" aria-controls="visuals" aria-selected="false" style="font-family: 'Comic Neue', cursive; background-color: #DAA520; color: #8B4513;">Visuals</a>
         </li>
     </ul>
     <div class="tab-content" id="resultsTabContent">
-        <!-- Recipes Tab -->
+        <!-- Recipes Tab (Top 10) -->
         <div class="tab-pane fade show active pt-3" id="recipes" role="tabpanel" aria-labelledby="recipes-tab">
             {% if recipes %}
                 {% for recipe in recipes %}
-                    <div class="recipe-card animate__animated animate__zoomIn mb-4">
-                        <h3>{{ recipe.name }}</h3>
-                        <p><strong>Match:</strong> {{ recipe.match_percent }}%</p>
-                        <p class="description"><em>{{ recipe.description }}</em></p>
-                        <p><strong>Your Ingredients in Recipe:</strong> {{ recipe.have | join(', ') }}</p>
-                        <p><strong>Missing Ingredients:</strong> {{ recipe.missing | join(', ') }}</p>
+                    <div class="recipe-card py-2">
+                        <h3 style="font-family: 'Comic Neue', cursive; color: #DAA520;">{{ recipe.recipe_name }}</h3>
+                        <p style="font-family: 'Roboto', sans-serif; color: #8B4513;"><strong>Match:</strong> {{ recipe.match_percent }}%</p>
+                        <p style="font-family: 'Roboto', sans-serif; color: #DAA520;"><strong>Your Ingredients:</strong> {{ recipe.have | join(', ') }}</p>
+                        <p style="font-family: 'Roboto', sans-serif; color: #8B4513;"><strong>Missing:</strong> {{ recipe.missing | join(', ') }}</p>
                         {% if recipe.substitutions %}
-                            <p><strong>Substitution Suggestions:</strong></p>
-                            <ul>
-                                {% for missing, substitute in recipe.substitutions.items() %}
-                                    <li>{{ missing }} → {{ substitute }}</li>
+                            <p style="font-family: 'Roboto', sans-serif; color: #DAA520;"><strong>Substitutions:</strong></p>
+                            <ul style="font-family: 'Comic Neue', cursive; color: #8B4513;">
+                                {% for missing_ing, substitute_ing in recipe.substitutions.items() %}
+                                    <li>{{ missing_ing }} → {{ substitute_ing }}</li>
                                 {% endfor %}
                             </ul>
                         {% endif %}
-                        <h4>Cooking Steps:</h4>
-                        <ol>
-                            {% for step in recipe.steps %}
-                                <li>{{ step }}</li>
-                            {% endfor %}
-                        </ol>
+                        <p style="font-family: 'Roboto', sans-serif; color: #DAA520;"><strong>Steps:</strong><br>{{ recipe.instructions }}</p>
+                        <p style="font-family: 'Roboto', sans-serif; color: #888;"><em>Source: {{ recipe.source }}</em></p>
                     </div>
                 {% endfor %}
             {% else %}
-                <p class="no-match">No recipes matched your ingredients. Try adding more variety!</p>
+                <p class="no-match py-2" style="font-family: 'Comic Neue', cursive; color: #8B4513;">No recipes matched your ingredients at 10% or above. Try stirring in more ingredients!</p>
             {% endif %}
         </div>
-        <!-- Culinary Ancestry Tab -->
-        <div class="tab-pane fade pt-3" id="ancestry" role="tabpanel" aria-labelledby="ancestry-tab">
-            <div class="food-identity text-center mb-4">
-                <h4>Your Culinary Ancestry Report</h4>
-                {% if food_identity %}
-                    <p>Your ingredients reveal strong influences from: <strong>{{ food_identity | join(', ') }}</strong>.</p>
-                    <p>This suggests your culinary DNA is a fusion of these cultures!</p>
-                {% else %}
-                    <p>We couldn’t determine your culinary ancestry. Try including more distinctive ingredients!</p>
-                {% endif %}
+        
+        <!-- Visualizations Tab -->
+        <div class="tab-pane fade pt-3" id="visuals" role="tabpanel" aria-labelledby="visuals-tab">
+            <!-- Flavor Profile Radar (Integrated) -->
+            <div class="visualization-card py-2">
+                <h4 style="font-family: 'Comic Neue', cursive; color: #DAA520;">Your Flavor Profile</h4>
+                <p style="font-family: 'Roboto', sans-serif; color: #8B4513;">{{ radar_description }} {{ flavor_message }}</p>
+                <div id="graph-radar" class="chart-container"></div>
+                <script>
+                    var graphRadar = {{ graphJSON_radar | safe }};
+                    Plotly.newPlot('graph-radar', graphRadar.data, graphRadar.layout, {responsive: true, displayModeBar: false});
+                </script>
+            </div>
+            
+            <!-- Top Ingredients Reflecting Your Food Identity -->
+            <div class="visualization-card py-2">
+                <h4 style="font-family: 'Comic Neue', cursive; color: #DAA520;">Top Ingredients Reflecting Your Food Identity</h4>
+                <p style="font-family: 'Roboto', sans-serif; color: #8B4513;">{{ freq_description }}</p>
+                <div id="graph-freq" class="chart-container"></div>
+                <script>
+                    var graphFreq = {{ graphJSON_freq | safe }};
+                    Plotly.newPlot('graph-freq', graphFreq.data, graphFreq.layout, {responsive: true, displayModeBar: false});
+                </script>
+            </div>
+            
+            <!-- How Recipe Size Hints at Your Culinary Culture -->
+            <div class="visualization-card py-2">
+                <h4 style="font-family: 'Comic Neue', cursive; color: #DAA520;">How Recipe Size Hints at Your Culinary Culture</h4>
+                <p style="font-family: 'Roboto', sans-serif; color: #8B4513;">{{ hist_description }}</p>
+                <div id="graph-hist" class="chart-container"></div>
+                <script>
+                    var graphHist = {{ graphJSON_hist | safe }};
+                    Plotly.newPlot('graph-hist', graphHist.data, graphHist.layout, {responsive: true, displayModeBar: false});
+                </script>
+            </div>
+            
+            <!-- Your Cooking Style: Simplicity or Complexity? -->
+            <div class="visualization-card py-2">
+                <h4 style="font-family: 'Comic Neue', cursive; color: #DAA520;">Your Cooking Style: Simplicity or Complexity?</h4>
+                <p style="font-family: 'Roboto', sans-serif; color: #8B4513;">{{ scatter_description }}</p>
+                <div id="graph-scatter" class="chart-container"></div>
+                <script>
+                    var graphScatter = {{ graphJSON_scatter | safe }};
+                    Plotly.newPlot('graph-scatter', graphScatter.data, graphScatter.layout, {responsive: true, displayModeBar: false});
+                </script>
+            </div>
+            
+            <!-- Ingredient Pairings and Your Food Identity -->
+            <div class="visualization-card py-2">
+                <h4 style="font-family: 'Comic Neue', cursive; color: #DAA520;">Ingredient Pairings and Your Food Identity</h4>
+                <p style="font-family: 'Roboto', sans-serif; color: #8B4513;">{{ network_description }}</p>
+                <div id="graph-network" class="chart-container"></div>
+                <script>
+                    var graphNetwork = {{ graphJSON_network | safe }};
+                    Plotly.newPlot('graph-network', graphNetwork.data, graphNetwork.layout, {responsive: true, displayModeBar: false});
+                </script>
             </div>
         </div>
-        <!-- Visualizations Tab -->
-        <div class="tab-pane fade pt-3" id="viz" role="tabpanel" aria-labelledby="viz-tab">
-            <!-- Cultural Origin Map -->
-            {% if graphJSON_map %}
-            <div id="graph-map" class="chart-container mb-4"></div>
-            <script>
-                var graphMap = {{ graphJSON_map | safe }};
-                Plotly.newPlot('graph-map', graphMap.data, graphMap.layout);
-            </script>
-            {% endif %}
-            <!-- Recipe Match Bar Chart -->
-            {% if graphJSON_match %}
-            <div id="graph-match" class="chart-container mb-4"></div>
-            <script>
-                var graphMatch = {{ graphJSON_match | safe }};
-                Plotly.newPlot('graph-match', graphMatch.data, graphMatch.layout);
-            </script>
-            {% endif %}
-            <!-- Top Ingredients Frequency -->
-            <div id="graph-ing" class="chart-container mb-4"></div>
-            <script>
-                var graphIng = {{ graphJSON_ing | safe }};
-                Plotly.newPlot('graph-ing', graphIng.data, graphIng.layout);
-            </script>
-            <!-- Recipe Clusters Pie Chart -->
-            {% if graphJSON_cluster %}
-            <div id="graph-cluster" class="chart-container mb-4"></div>
-            <script>
-                var graphCluster = {{ graphJSON_cluster | safe }};
-                Plotly.newPlot('graph-cluster', graphCluster.data, graphCluster.layout);
-            </script>
-            {% endif %}
-            <!-- Ingredient Co-occurrence Network Graph -->
-            <div id="graph-network" class="chart-container mb-4"></div>
-            <script>
-                var graphNetwork = {{ graphJSON_network | safe }};
-                Plotly.newPlot('graph-network', graphNetwork.data, graphNetwork.layout);
-            </script>
-            <!-- Flavor Profile Radar Chart -->
-            <div id="graph-radar" class="chart-container mb-4"></div>
-            <script>
-                var graphRadar = {{ graphJSON_radar | safe }};
-                Plotly.newPlot('graph-radar', graphRadar.data, graphRadar.layout);
-            </script>
-        </div>
     </div>
-    <div class="text-center my-4">
-        <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg interactive-button">&#8592; Back to Remix</a>
+    
+    <div class="text-center my-3">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg interactive-button" style="background-color: #DAA520; border-color: #DAA520;">← Back to the Kitchen</a>
     </div>
 </div>
 {% endblock %}
