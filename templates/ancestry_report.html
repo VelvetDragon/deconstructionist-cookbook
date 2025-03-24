@@ -1,20 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="py-3">
-    <h2 class="text-center" style="font-family: 'Comic Neue', cursive; color: #DAA520;">Your Culinary Ancestry Report</h2>
-    <p class="text-center" style="font-family: 'Roboto', sans-serif; color: #8B4513;">Based on your ingredients: <strong>{{ user_ingredients | join(', ') }}</strong></p>
+<div class="py-3 ancestry-report animated-fade">
+  <h2 class="identity-highlight">Your Culinary Ancestry</h2>
+  <p>From your ingredients: <strong>{{ user_ingredients | join(', ') }}</strong></p>
+  <div class="my-4">
+    <p class="identity-highlight" style="font-size: 1.2em;">{{ ancestry_message }}</p>
+    <p>Food tells a story beyond borders—think of a tamale, born in Mexico, but claimed by Mississippi. What does your pantry say about you?</p>
+    {% if ancestry_recipes %}
+      <h4 class="identity-highlight">Recipes from Your Roots</h4>
+      {% for recipe in ancestry_recipes %}
+        <div class="recipe-card my-3 animated-card">
+          <h5>{{ recipe.recipe_name }}</h5>
+          <div>{{ recipe.instructions | safe }}</div>
+        </div>
+      {% endfor %}
+    {% endif %}
     <div class="text-center my-3">
-        <p style="font-family: 'Roboto', sans-serif; color: #8B4513;">{{ ancestry_message }}</p>
-        {% if ancestry_recipes %}
-            <h4 style="font-family: 'Comic Neue', cursive; color: #DAA520;">Suggested Recipes from Your Heritage</h4>
-            <ul style="list-style-type: none; font-family: 'Roboto', sans-serif; color: #8B4513;">
-                {% for recipe in ancestry_recipes %}
-                    <li>{{ recipe.recipe_name }}<br>{{ recipe.instructions }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <p style="font-family: 'Roboto', sans-serif; color: #DAA520;">Explore recipes from your dominant heritage to deepen your culinary identity!</p>
-        <a href="{{ url_for('results') }}" class="btn btn-secondary btn-lg interactive-button" style="background-color: #DAA520; border-color: #DAA520;">Back to Results</a>
+      <a href="{{ url_for('results', ingredients=','.join(user_ingredients)) }}" class="btn btn-secondary btn-lg interactive-button">← Back to Results</a>
     </div>
+  </div>
 </div>
 {% endblock %}

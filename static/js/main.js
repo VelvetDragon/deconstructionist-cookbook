@@ -1,25 +1,45 @@
-// main.js
-
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("Deconstructionist Cookbook loaded – unveiling your culinary identity through ingredients!");
+    console.log("Deconstructionist Cookbook – Savor Your Story!");
 
-    // Lightweight hover effect for buttons and cards
-    const interactiveElements = document.querySelectorAll('.interactive-button, .recipe-card');
+    const interactiveElements = document.querySelectorAll('.interactive-button, .recipe-card, .landing-card');
     interactiveElements.forEach(element => {
         element.addEventListener('mouseover', function() {
-            this.style.transform = 'scale(1.02)';
-            this.style.transition = 'transform 0.2s ease';
+            this.style.transform = 'scale(1.05)';
         });
         element.addEventListener('mouseout', function() {
             this.style.transform = 'scale(1)';
         });
     });
 
-    // Handle Flavor Profile Radar button (switch to Visuals tab)
     const flavorRadarBtn = document.getElementById('flavorRadarBtn');
-    flavorRadarBtn.addEventListener('click', function() {
-        document.getElementById('visuals-tab').click();  // Switch to Visuals tab
-        this.style.transform = 'scale(1.05)';
-        setTimeout(() => this.style.transform = 'scale(1)', 200);
+    if (flavorRadarBtn) {
+        flavorRadarBtn.addEventListener('click', function() {
+            const radarSection = document.getElementById('graph-radar');
+            if (radarSection) {
+                radarSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+
+    const likeForms = document.querySelectorAll('.like-form');
+    likeForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.redirected) {
+                    const button = form.querySelector('.like-button');
+                    button.innerHTML = '<i class="fa fa-heart" aria-hidden="true"></i>';
+                    button.classList.add('liked');
+                    button.disabled = true;
+                    window.location.reload(); // Refresh to update liked recipes tab
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
     });
 });

@@ -1,0 +1,531 @@
+{% extends "base.html" %}
+
+{% block title %}Food Memory Diary - Deconstructionist Cookbook{% endblock %}
+
+{% block head %}
+<!-- Leaflet CSS for the map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<style>
+    #map-container {
+        height: 300px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    .leaflet-container {
+        height: 300px;
+    }
+    .memory-form {
+        transition: all 0.3s ease;
+    }
+    .recording-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background-color: red;
+        border-radius: 50%;
+        margin-right: 8px;
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.3; }
+        100% { opacity: 1; }
+    }
+    .voice-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .memory-card {
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    .memory-image {
+        height: 180px;
+        object-fit: cover;
+        width: 100%;
+        transition: transform 0.3s ease;
+    }
+    .memory-card:hover .memory-image {
+        transform: scale(1.05);
+    }
+    .audio-controls {
+        width: 100%;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="memory-diary-container">
+    <div class="row mb-5">
+        <div class="col-md-8 offset-md-2 text-center" data-aos="fade-up">
+            <h2 class="mb-4">Your Food Memory Diary</h2>
+            <p class="lead">Document your personal food experiences and memories to create a living archive of your culinary journey.</p>
+            <div class="tech-decoration">
+                <div class="circle-pulse"></div>
+                <div class="horizontal-line"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mb-5" data-aos="fade-up" data-aos-delay="100">
+            <div class="memory-form-card">
+                <div class="pattern-overlay"></div>
+                <div class="memory-form-content">
+                    <h3 class="mb-4"><i class="fas fa-book-open"></i> Create a New Food Memory</h3>
+                    <p class="mb-4">Record your significant food experiences and the emotions, people, and places associated with them.</p>
+                    
+                    <form action="{{ url_for('food_memory_diary') }}" method="post" id="memoryForm" class="needs-validation" novalidate>
+                        <div class="form-group mb-4">
+                            <label for="dish_name">Dish or Food Item</label>
+                            <input type="text" class="form-control" id="dish_name" name="dish_name" placeholder="What dish or food item is this memory about?" required>
+                            <div class="invalid-feedback">Please enter a dish or food item.</div>
+                        </div>
+                        
+                        <div class="form-row mb-4">
+                            <div class="col-md-6 mb-3">
+                                <label for="location">Location</label>
+                                <input type="text" class="form-control" id="location" name="location" placeholder="Where did you experience this dish?" required>
+                                <div class="invalid-feedback">Please enter a location.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="year">Year</label>
+                                <input type="number" class="form-control" id="year" name="year" placeholder="When did this memory take place?" min="1900" max="2099" required>
+                                <div class="invalid-feedback">Please enter a valid year.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-4">
+                            <label for="memory_text">Your Memory</label>
+                            <textarea class="form-control" id="memory_text" name="memory_text" rows="5" placeholder="Describe your experience with this dish and why it's meaningful to you..." required></textarea>
+                            <div class="invalid-feedback">Please share your memory.</div>
+                        </div>
+                        
+                        <div class="form-group mb-4">
+                            <label>Emotions Associated with This Memory</label>
+                            <div class="emotion-grid">
+                                <div class="emotion-option">
+                                    <input type="checkbox" id="joy" name="emotions" value="joy" class="emotion-checkbox">
+                                    <label for="joy">Joy</label>
+                                </div>
+                                <div class="emotion-option">
+                                    <input type="checkbox" id="nostalgia" name="emotions" value="nostalgia" class="emotion-checkbox">
+                                    <label for="nostalgia">Nostalgia</label>
+                                </div>
+                                <div class="emotion-option">
+                                    <input type="checkbox" id="comfort" name="emotions" value="comfort" class="emotion-checkbox">
+                                    <label for="comfort">Comfort</label>
+                                </div>
+                                <div class="emotion-option">
+                                    <input type="checkbox" id="excitement" name="emotions" value="excitement" class="emotion-checkbox">
+                                    <label for="excitement">Excitement</label>
+                                </div>
+                                <div class="emotion-option">
+                                    <input type="checkbox" id="satisfaction" name="emotions" value="satisfaction" class="emotion-checkbox">
+                                    <label for="satisfaction">Satisfaction</label>
+                                </div>
+                                <div class="emotion-option">
+                                    <input type="checkbox" id="surprise" name="emotions" value="surprise" class="emotion-checkbox">
+                                    <label for="surprise">Surprise</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <h4 class="mb-3"><i class="fas fa-users"></i> Add Friend Voices (Optional)</h4>
+                        <p class="mb-3">Include perspectives from friends or family who shared this food experience with you.</p>
+                        
+                        <div id="friendVoices">
+                            <!-- Friend voice fields will be added here dynamically -->
+                        </div>
+                        
+                        <div class="text-center mb-4">
+                            <button type="button" id="addFriendVoice" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-plus-circle"></i> Add Friend Voice
+                            </button>
+                        </div>
+                        
+                        <div class="form-group mb-4">
+                            <label for="location-map">Pin Your Memory Location on Map</label>
+                            <div class="map-container mb-3" id="memory-map"></div>
+                            <div class="map-instructions">
+                                <p><i class="fas fa-info-circle"></i> Click on the map to place a pin at your memory location</p>
+                                <div id="selected-location" class="selected-location-info">
+                                    <span>No location selected yet</span>
+                                </div>
+                            </div>
+                            <!-- Hidden fields to store the coordinates -->
+                            <input type="hidden" id="location_lat" name="location_lat" required>
+                            <input type="hidden" id="location_lng" name="location_lng" required>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg interactive-button">
+                                <span class="button-icon"><i class="fas fa-save"></i></span>
+                                <span class="button-text">Save Memory</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="memories-list-card">
+                <div class="pattern-overlay"></div>
+                <div class="memories-list-content">
+                    <h3 class="mb-4"><i class="fas fa-history"></i> Your Food Memory Archive</h3>
+                    
+                    {% if memories %}
+                        <div class="memories-container">
+                            {% for memory in memories %}
+                                <div class="memory-item" data-aos="fade-up">
+                                    <div class="memory-header">
+                                        <h4 class="memory-title">{{ memory.dish_name }}</h4>
+                                        <div class="memory-meta">
+                                            <span class="memory-location"><i class="fas fa-map-marker-alt"></i> {{ memory.location }}</span>
+                                            <span class="memory-year"><i class="fas fa-calendar-alt"></i> {{ memory.year }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="memory-body">
+                                        <p class="memory-text">{{ memory.memory_text }}</p>
+                                        
+                                        {% if memory.emotions %}
+                                            <div class="memory-emotions">
+                                                {% for emotion in memory.emotions %}
+                                                    <span class="emotion-tag">{{ emotion }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if memory.friend_voices %}
+                                            <div class="memory-friends mt-3">
+                                                <h5 class="friend-voices-title"><i class="fas fa-users"></i> Friend Voices</h5>
+                                                {% for friend in memory.friend_voices %}
+                                                    <div class="friend-voice">
+                                                        <div class="friend-name">{{ friend.friend_name }}</div>
+                                                        <p class="friend-quote">"{{ friend.voice }}"</p>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <a href="{{ url_for('food_memory_map') }}" class="btn btn-primary interactive-button">
+                                <i class="fas fa-map-marked-alt"></i> View Memory Map
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="empty-state text-center p-5">
+                            <div class="empty-icon mb-3">
+                                <i class="fas fa-book fa-3x"></i>
+                            </div>
+                            <h5>No Memories Yet</h5>
+                            <p class="text-muted">Your food memory archive is empty. Start by creating your first food memory!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the map
+        const map = L.map('memory-map').setView([40.7128, -74.0060], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Add marker on click
+        let marker;
+        const latInput = document.getElementById('location_lat');
+        const lngInput = document.getElementById('location_lng');
+        const selectedLocationInfo = document.getElementById('selected-location');
+        
+        // Use geolocation to center the map on user's current location if available
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                map.setView([position.coords.latitude, position.coords.longitude], 13);
+            }, function(error) {
+                console.error("Error getting location: ", error);
+            });
+        }
+        
+        // Add a marker when map is clicked
+        map.on('click', function(e) {
+            // Remove existing marker if any
+            if (marker) {
+                map.removeLayer(marker);
+            }
+            
+            // Add new marker
+            marker = L.marker(e.latlng, {
+                draggable: true // Make marker draggable for fine-tuning
+            }).addTo(map);
+            
+            // Add drop animation to marker
+            marker._icon.classList.add('marker-drop');
+            
+            // Store coordinates in hidden fields
+            latInput.value = e.latlng.lat.toFixed(6);
+            lngInput.value = e.latlng.lng.toFixed(6);
+            
+            // Show selected location info
+            selectedLocationInfo.innerHTML = `
+                <strong>Selected Location:</strong> ${e.latlng.lat.toFixed(6)}, ${e.latlng.lng.toFixed(6)}
+                <button type="button" class="btn btn-sm btn-link reset-location">Reset</button>
+            `;
+            selectedLocationInfo.classList.add('active');
+            
+            // Update coordinates when marker is dragged
+            marker.on('dragend', function(event) {
+                const position = marker.getLatLng();
+                latInput.value = position.lat.toFixed(6);
+                lngInput.value = position.lng.toFixed(6);
+                
+                selectedLocationInfo.innerHTML = `
+                    <strong>Selected Location:</strong> ${position.lat.toFixed(6)}, ${position.lng.toFixed(6)}
+                    <button type="button" class="btn btn-sm btn-link reset-location">Reset</button>
+                `;
+            });
+            
+            // Add event listener to reset button
+            document.querySelector('.reset-location').addEventListener('click', function() {
+                if (marker) {
+                    map.removeLayer(marker);
+                    marker = null;
+                }
+                
+                latInput.value = '';
+                lngInput.value = '';
+                
+                selectedLocationInfo.innerHTML = '<span>No location selected yet</span>';
+                selectedLocationInfo.classList.remove('active');
+            });
+        });
+        
+        // File input label update
+        document.getElementById('image').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'Choose file';
+            document.querySelector('.custom-file-label').textContent = fileName;
+        });
+        
+        // Voice recording functionality
+        let mediaRecorder;
+        let audioChunks = [];
+        
+        document.getElementById('startRecording').addEventListener('click', function() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    audioChunks = [];
+                    mediaRecorder = new MediaRecorder(stream);
+                    
+                    mediaRecorder.addEventListener('dataavailable', event => {
+                        audioChunks.push(event.data);
+                    });
+                    
+                    mediaRecorder.addEventListener('stop', () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        const audio = document.getElementById('audioPlayback');
+                        audio.src = audioUrl;
+                        audio.style.display = 'block';
+                        
+                        // Convert to base64 for form submission
+                        const reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = function() {
+                            document.getElementById('voiceBlob').value = reader.result;
+                        };
+                    });
+                    
+                    mediaRecorder.start();
+                    document.getElementById('startRecording').disabled = true;
+                    document.getElementById('stopRecording').disabled = false;
+                    document.getElementById('recordingStatus').innerHTML = '<span class="recording-indicator"></span> Recording...';
+                })
+                .catch(error => {
+                    console.error('Error accessing microphone:', error);
+                    alert('Could not access your microphone. Please check your browser permissions.');
+                });
+        });
+        
+        document.getElementById('stopRecording').addEventListener('click', function() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                document.getElementById('startRecording').disabled = false;
+                document.getElementById('stopRecording').disabled = true;
+                document.getElementById('recordingStatus').textContent = 'Recording saved';
+            }
+        });
+        
+        // Friend memory functionality
+        let friendMediaRecorder;
+        let friendAudioChunks = [];
+        
+        document.querySelectorAll('.add-friend-memory').forEach(button => {
+            button.addEventListener('click', function() {
+                const memoryId = this.getAttribute('data-memory-id');
+                document.getElementById('friendMemoryForm').action = `/add_friend_memory/${memoryId}`;
+            });
+        });
+        
+        document.getElementById('startFriendRecording').addEventListener('click', function() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    friendAudioChunks = [];
+                    friendMediaRecorder = new MediaRecorder(stream);
+                    
+                    friendMediaRecorder.addEventListener('dataavailable', event => {
+                        friendAudioChunks.push(event.data);
+                    });
+                    
+                    friendMediaRecorder.addEventListener('stop', () => {
+                        const audioBlob = new Blob(friendAudioChunks, { type: 'audio/mp3' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        const audio = document.getElementById('friendAudioPlayback');
+                        audio.src = audioUrl;
+                        audio.style.display = 'block';
+                        
+                        // Convert to base64 for form submission
+                        const reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = function() {
+                            document.getElementById('friendVoiceBlob').value = reader.result;
+                        };
+                    });
+                    
+                    friendMediaRecorder.start();
+                    document.getElementById('startFriendRecording').disabled = true;
+                    document.getElementById('stopFriendRecording').disabled = false;
+                    document.getElementById('friendRecordingStatus').innerHTML = '<span class="recording-indicator"></span> Recording...';
+                })
+                .catch(error => {
+                    console.error('Error accessing microphone:', error);
+                    alert('Could not access your microphone. Please check your browser permissions.');
+                });
+        });
+        
+        document.getElementById('stopFriendRecording').addEventListener('click', function() {
+            if (friendMediaRecorder && friendMediaRecorder.state !== 'inactive') {
+                friendMediaRecorder.stop();
+                friendMediaRecorder.stream.getTracks().forEach(track => track.stop());
+                document.getElementById('startFriendRecording').disabled = false;
+                document.getElementById('stopFriendRecording').disabled = true;
+                document.getElementById('friendRecordingStatus').textContent = 'Recording saved';
+            }
+        });
+        
+        // View on map button functionality
+        document.querySelectorAll('.view-on-map').forEach(button => {
+            button.addEventListener('click', function() {
+                const lat = parseFloat(this.getAttribute('data-lat'));
+                const lng = parseFloat(this.getAttribute('data-lng'));
+                
+                map.setView([lat, lng], 13);
+                if (marker) {
+                    marker.setLatLng([lat, lng]);
+                } else {
+                    marker = L.marker([lat, lng]).addTo(map);
+                }
+                
+                // Scroll to map
+                document.getElementById('memory-map').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        // Add animation to elements
+        const form = document.querySelector('.memory-form');
+        form.style.opacity = '0';
+        form.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            form.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            form.style.opacity = '1';
+            form.style.transform = 'translateY(0)';
+        }, 300);
+        
+        const cards = document.querySelectorAll('.memory-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 500 + (index * 100));
+        });
+
+        // Form validation
+        const memoryForm = document.getElementById('memoryForm');
+        
+        memoryForm.addEventListener('submit', function(event) {
+            if (!memoryForm.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            memoryForm.classList.add('was-validated');
+        });
+        
+        // Friend voices functionality
+        const addFriendVoiceBtn = document.getElementById('addFriendVoice');
+        const friendVoicesContainer = document.getElementById('friendVoices');
+        let friendVoiceCount = 0;
+        
+        addFriendVoiceBtn.addEventListener('click', function() {
+            const friendVoiceGroup = document.createElement('div');
+            friendVoiceGroup.className = 'friend-voice-group';
+            
+            friendVoiceGroup.innerHTML = `
+                <button type="button" class="remove-friend">
+                    <i class="fas fa-times-circle"></i>
+                </button>
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label for="friend_name_${friendVoiceCount}">Friend's Name</label>
+                        <input type="text" class="form-control" id="friend_name_${friendVoiceCount}" name="friend_name_${friendVoiceCount}" 
+                               placeholder="Enter your friend's name" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label for="friend_voice_${friendVoiceCount}">Their Perspective</label>
+                        <textarea class="form-control" id="friend_voice_${friendVoiceCount}" name="friend_voice_${friendVoiceCount}" 
+                                  rows="3" placeholder="What did they say about this food experience?" required></textarea>
+                    </div>
+                </div>
+            `;
+            
+            friendVoicesContainer.appendChild(friendVoiceGroup);
+            friendVoiceCount++;
+            
+            // Add event listener to remove button
+            const removeBtn = friendVoiceGroup.querySelector('.remove-friend');
+            removeBtn.addEventListener('click', function() {
+                friendVoiceGroup.remove();
+            });
+        });
+        
+        // Fix map size issue on tab/container reveal
+        setTimeout(function() {
+            map.invalidateSize();
+        }, 100);
+    });
+</script>
+{% endblock %}

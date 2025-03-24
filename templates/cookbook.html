@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Cookbook - Deconstructionist Cookbook{% endblock %}
+
+{% block content %}
+<div class="cookbook-container">
+    <div class="row mb-5">
+        <div class="col-md-8 offset-md-2 text-center" data-aos="fade-up">
+            <h2 class="mb-4">Your Digital Cookbook</h2>
+            <p class="lead">Enter the ingredients you typically use in your cooking to discover your algorithmic culinary identity and receive personalized recipe recommendations.</p>
+            <div class="tech-decoration">
+                <div class="circle-pulse"></div>
+                <div class="horizontal-line"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8" data-aos="fade-up" data-aos-delay="100">
+            <div class="form-card">
+                <div class="pattern-overlay animated-bg"></div>
+                <div class="form-card-content">
+                    <form id="ingredient-form" action="{{ url_for('results') }}" method="post">
+                        <div class="ingredient-section mb-4">
+                            <h3 class="mb-3">Enter Your Ingredients</h3>
+                            <p class="mb-4">Tell us what ingredients you commonly use to cook with. For the best results, try to include at least 5-10 ingredients that represent your cooking style.</p>
+                            
+                            <div class="ingredient-input-area">
+                                <textarea id="ingredients-textarea" name="ingredients" class="form-control mb-4" rows="5" placeholder="Enter ingredients separated by commas (e.g., olive oil, garlic, salt, pepper, basil)"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-5">
+                            <button type="submit" id="generate-button" class="btn btn-lg btn-primary pulse-button">
+                                <span class="button-icon"><i class="fas fa-utensils"></i></span>
+                                <span class="button-text">Generate Recipes</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block head %}
+<style>
+    .cookbook-container {
+        padding: 2rem 0 4rem;
+    }
+    
+    .tech-decoration {
+        position: relative;
+        height: 60px;
+        width: 100%;
+        margin: 2rem auto;
+    }
+    
+    .circle-pulse {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background-color: var(--vibrant-color);
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        box-shadow: 0 0 0 rgba(255, 107, 107, 0.4);
+        animation: enhancedPulse 2s infinite;
+    }
+    
+    .horizontal-line {
+        position: absolute;
+        height: 2px;
+        width: 60%;
+        background: linear-gradient(90deg, transparent, var(--vibrant-color), transparent);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .form-card {
+        position: relative;
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: 0 10px 30px rgba(255, 107, 107, 0.2);
+        overflow: hidden;
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    .form-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(255, 107, 107, 0.3);
+    }
+    
+    .animated-bg {
+        background: linear-gradient(-45deg, rgba(255, 248, 248, 0.5), rgba(255, 229, 229, 0.5), rgba(255, 214, 214, 0.5), rgba(255, 200, 200, 0.5));
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+    }
+    
+    .form-card-content {
+        position: relative;
+        z-index: 1;
+        padding: 2.5rem;
+    }
+    
+    #ingredients-textarea {
+        border: 2px solid rgba(255, 107, 107, 0.3);
+        border-radius: var(--border-radius-sm);
+        transition: all 0.3s ease;
+        font-size: 1.1rem;
+        background-color: rgba(255, 255, 255, 0.7);
+        resize: none;
+    }
+    
+    #ingredients-textarea:focus {
+        border-color: var(--vibrant-color);
+        box-shadow: 0 0 15px rgba(255, 107, 107, 0.2);
+        background-color: white;
+    }
+    
+    .pulse-button {
+        position: relative;
+        background: linear-gradient(135deg, var(--vibrant-gradient-start), var(--vibrant-gradient-end));
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .pulse-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+    }
+    
+    .pulse-button:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 10px rgba(255, 107, 107, 0.4);
+    }
+    
+    .pulse-button::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 150%;
+        height: 150%;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        transition: transform 0.5s, opacity 0.5s;
+    }
+    
+    .pulse-button:hover::after {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    
+    .button-icon {
+        margin-right: 10px;
+    }
+    
+    @keyframes enhancedPulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+            transform: translate(-50%, -50%) scale(1);
+        }
+        70% {
+            box-shadow: 0 0 0 15px rgba(255, 107, 107, 0);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+    
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('ingredient-form');
+        const generateButton = document.getElementById('generate-button');
+        const ingredientsTextarea = document.getElementById('ingredients-textarea');
+        
+        // Show loading state when form is submitted
+        form.addEventListener('submit', function(e) {
+            if (!ingredientsTextarea.value.trim()) {
+                e.preventDefault();
+                ingredientsTextarea.classList.add('is-invalid');
+                return;
+            }
+            
+            generateButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="button-text">Processing...</span>
+            `;
+            generateButton.disabled = true;
+        });
+        
+        // Validate textarea
+        ingredientsTextarea.addEventListener('input', function() {
+            if (this.value.trim()) {
+                this.classList.remove('is-invalid');
+            }
+        });
+        
+        // Focus on the textarea when the page loads
+        ingredientsTextarea.focus();
+    });
+</script>
+{% endblock %}

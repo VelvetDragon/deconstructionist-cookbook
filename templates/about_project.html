@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="py-3">
+  <h2 class="identity-highlight" style="font-family: 'Playfair Display', serif; color: var(--secondary-color);">
+    About The Deconstructionist Cookbook
+  </h2>
+  
+  <div class="row mt-4">
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3 class="card-title mb-3">Project Philosophy & Scholarly Context</h3>
+          
+          <p class="lead">This project explores the intersection of food, memory, technology, and cultural identity in an increasingly globalized world.</p>
+          
+          <h4 class="mt-4">The Algorithmic Food Identity</h4>
+          <p>
+            The ingredient-to-recipe algorithm represents both the power and limitations of computational approaches to cultural artifacts like food. When we reduce cuisines to ingredients and patterns, we gain efficiency but lose nuance. The algorithm might label a dish as "Mexican" based on ingredients, but this classification obscures complex histories of migration, adaptation, and cultural exchange.
+          </p>
+          <p>
+            Consider the Mississippi Delta tamale - algorithmically classified as "Mexican" based on ingredients, yet deeply embedded in African American culinary traditions of the American South. Food resists simple categorization because it carries layered meanings beyond its component parts.
+          </p>
+          
+          <h4 class="mt-4">Memory, Place, and Identity</h4>
+          <p>
+            The food memory map serves as a counterpoint to algorithmic classification. Here, food is understood not merely as ingredients but as embodied experiences tied to specific times, places, and relationships. When users pin memories of foods to locations, they're mapping emotional and cultural geographies that algorithms struggle to capture.
+          </p>
+          <p>
+            A Moroccan dish experienced in a German restaurant by an American traveler creates what anthropologist James Clifford might call a "contact zone" - a space where cultures meet, clash, and grapple with each other. These complex intersections resist binary classifications of "authentic" versus "inauthentic."
+          </p>
+          
+          <h4 class="mt-4">Deconstructing Food</h4>
+          <p>
+            The name "Deconstructionist Cookbook" references Jacques Derrida's philosophical approach that questions fixed meanings and binary oppositions. Food is similarly deconstructed in this project:
+          </p>
+          <ul>
+            <li>First broken down to ingredients (algorithmic deconstruction)</li>
+            <li>Then reconstructed through personal stories (experiential reconstruction)</li>
+          </ul>
+          <p>
+            This tension between technological categorization and lived experience mirrors broader questions in digital humanities: Can human experiences be meaningfully quantified? What is gained and lost when cultural practices are algorithmically processed?
+          </p>
+        </div>
+      </div>
+      
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3 class="card-title mb-3">Technological and Scholarly Implications</h3>
+          
+          <h4>What the Project Does:</h4>
+          <ul>
+            <li>Demonstrates how algorithms simplify cultural complexity through food classification</li>
+            <li>Creates a participatory archive of food memories that resists simple categorization</li>
+            <li>Invites reflection on how food embodies personal and cultural identity</li>
+            <li>Visualizes the geographical dispersal of food experiences across borders</li>
+          </ul>
+          
+          <h4>What the Project Does Not Do:</h4>
+          <ul>
+            <li>Cannot capture the full sensory experience of food (taste, smell, texture)</li>
+            <li>Does not resolve tensions between algorithmic classification and lived experience</li>
+            <li>Cannot fully represent the historical and political dimensions of food appropriation and exchange</li>
+          </ul>
+          
+          <h4 class="mt-4">Scholarly Context</h4>
+          <p>
+            This project draws inspiration from several scholarly traditions:
+          </p>
+          <ul>
+            <li><strong>Food Studies:</strong> The work of scholars like Arjun Appadurai on how food travels and transforms</li>
+            <li><strong>Digital Humanities:</strong> Critical approaches to algorithmic culture and classification</li>
+            <li><strong>Memory Studies:</strong> How food embodies both personal and collective memory</li>
+            <li><strong>Critical Data Studies:</strong> Questions about representation and abstraction in data visualization</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3 class="card-title mb-3">Participate & Reflect</h3>
+          <p>
+            This project gains meaning through participation. We invite you to:
+          </p>
+          <ul>
+            <li>Add your own food memory to the map</li>
+            <li>Reflect on why certain foods matter to you</li>
+            <li>Consider how your food memories cross cultural boundaries</li>
+            <li>Question the categories assigned to your favorite recipes</li>
+          </ul>
+          <div class="text-center mt-4">
+            <a href="{{ url_for('food_memory_diary') }}" class="btn btn-primary">Add Your Food Memory</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title mb-3">Discussion Questions</h3>
+          <ol>
+            <li>How do your food memories challenge or reinforce cultural categories?</li>
+            <li>Can an algorithm ever fully understand the cultural significance of a dish?</li>
+            <li>What happens when a dish from one culture becomes popular in another?</li>
+            <li>How do your personal food memories relate to your sense of identity?</li>
+            <li>Do digital technologies enhance or limit our understanding of food cultures?</li>
+          </ol>
+        </div>
+      </div>
+      
+      <div class="card mt-4">
+        <div class="card-body">
+          <h3 class="card-title mb-3">Project Quote</h3>
+          <blockquote class="blockquote">
+            <p>"Tell me what you eat, and I'll tell you who you are."</p>
+            <footer class="blockquote-footer">Jean Anthelme Brillat-Savarin, <cite>The Physiology of Taste</cite> (1825)</footer>
+          </blockquote>
+          <p class="mt-3">
+            This project asks: In an age of algorithms and global exchange, is who we are through food still so easily defined?
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 
