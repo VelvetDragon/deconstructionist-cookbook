@@ -10,38 +10,6 @@ A modern, interactive culinary application that analyzes food memories, cooking 
 - **Voice Recording**: Capture food memories with both text and voice recordings
 - **Friend Contributions**: Allow friends to add their memories to your food map pins
 
-## Deployment
-
-This application is ready to be deployed using free hosting services like Render or PythonAnywhere.
-
-### Deploying on Render
-
-1. Create a Render account at [render.com](https://render.com)
-2. Connect your GitHub repository with this code
-3. Create a new Web Service with the following settings:
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `gunicorn wsgi:app`
-   - Environment: Python 3.9 (or later)
-4. Your app will be live at your Render URL when the build completes
-
-### Deploying on PythonAnywhere
-
-1. Create a PythonAnywhere account at [pythonanywhere.com](https://www.pythonanywhere.com)
-2. Upload your code or clone your repository
-3. Set up a Web app using Flask and point it to your wsgi.py file
-4. Make sure to create a virtual environment and install all packages from requirements.txt
-5. Your app will be live at yourusername.pythonanywhere.com
-
-## Local Development
-
-1. Clone this repository
-2. Create a virtual environment: `python -m venv venv`
-3. Activate the virtual environment:
-   - Windows: `venv\Scripts\activate`
-   - Mac/Linux: `source venv/bin/activate`
-4. Install requirements: `pip install -r requirements.txt`
-5. Run the application: `python app.py`
-6. Visit http://127.0.0.1:5000 in your browser
 
 ## Contributing Food Memories
 
